@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\BackofficeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,15 +21,19 @@ Route::get('/', function () {
     return view('welcome');
 })->name("welcome");
 
-Route::get('/article', function () {
-    return view('article');
-})->middleware(["auth","verification"])->name("article");
 
-Route::get('/backoffice', function () {
-    return view('backoffice');
-})->middleware(["auth","verification"])->name("backoffice");
+
+// Route::get('/backoffice', function () {
+//     return view('backoffice');
+// })->middleware(["auth","verification"])->name("backoffice");
+
+Route::get("/backoffice", [BackofficeController::class, "index"])->middleware(["auth","verification"])->name("backoffice");
+
 
 Route::resource("/role", RoleController::class);
+Route::resource("/user", UserController::class);
+Route::resource("/article", ArticleController::class)->middleware(["auth","verification"]);
+
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
